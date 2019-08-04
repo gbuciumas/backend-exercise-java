@@ -40,7 +40,7 @@ public class MoneyTransferApiIntegrationTest extends JerseyTest {
     @Test
     public void failsForDestinationAccountNotFound() {
         MoneyTransferRequest request = buildRequest("111111111", "19999999", 345.78);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(400, response.getStatus());
         Assert.assertEquals("Account not found", response.readEntity(String.class));
     }
@@ -48,7 +48,7 @@ public class MoneyTransferApiIntegrationTest extends JerseyTest {
     @Test
     public void failsForSourceAccountNotFound() {
         MoneyTransferRequest request = buildRequest("10001000", "11111111", 5.78);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(400, response.getStatus());
         Assert.assertEquals("Account not found", response.readEntity(String.class));
     }
@@ -56,7 +56,7 @@ public class MoneyTransferApiIntegrationTest extends JerseyTest {
     @Test
     public void failsIfTheAmountIsNotAvailable() {
         MoneyTransferRequest request = buildRequest("22222222", "11111111", 1010);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(400, response.getStatus());
         Assert.assertEquals("Insufficient funds", response.readEntity(String.class));
     }
@@ -64,7 +64,7 @@ public class MoneyTransferApiIntegrationTest extends JerseyTest {
     @Test
     public void canTransferMoney() {
         MoneyTransferRequest request = buildRequest("12345678", "23456789", 1000);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(200, response.getStatus());
         Assert.assertEquals(expectedAccount(), response.readEntity(Account.class));
     }

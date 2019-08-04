@@ -42,7 +42,7 @@ public class MoneyTransferApiTest extends JerseyTest {
     public void failsIfCannotPerformTransferException() {
         MoneyTransferRequest request = buildRequest("12345678", "23456789", 1000);
         when(moneyServiceMock.transferMoney(request)).thenThrow(CannotPerformTransferException.class);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(500, response.getStatus());
         Assert.assertEquals("Cannot perform transfer", response.readEntity(String.class));
     }
@@ -50,7 +50,7 @@ public class MoneyTransferApiTest extends JerseyTest {
     @Test
     public void failsIfMissingSourceAccount() {
         MoneyTransferRequest request = buildRequest(null, "111111111", 115.78);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(400, response.getStatus());
         Assert.assertEquals("Source account cannot be missing", response.readEntity(String.class));
     }
@@ -58,7 +58,7 @@ public class MoneyTransferApiTest extends JerseyTest {
     @Test
     public void failsIfMissingDestinationAccount() {
         MoneyTransferRequest request = buildRequest("111111111", null, 115.78);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(400, response.getStatus());
         Assert.assertEquals("Destination account cannot be missing", response.readEntity(String.class));
     }
@@ -67,7 +67,7 @@ public class MoneyTransferApiTest extends JerseyTest {
     public void failsIfMissingAmount() {
         MoneyTransferRequest request = buildRequest("111111111", "222222222", 1556.78);
         request.setAmount(null);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(400, response.getStatus());
         Assert.assertEquals("Amount cannot be missing", response.readEntity(String.class));
     }
@@ -75,7 +75,7 @@ public class MoneyTransferApiTest extends JerseyTest {
     @Test
     public void failsIfNegativeAmount() {
         MoneyTransferRequest request = buildRequest("111111111", "222222222", -15.78);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(400, response.getStatus());
         Assert.assertEquals("Amount cannot be negative", response.readEntity(String.class));
     }
@@ -83,7 +83,7 @@ public class MoneyTransferApiTest extends JerseyTest {
     @Test
     public void failsForIdenticalAccountNumbers() {
         MoneyTransferRequest request = buildRequest("111111111", "111111111", 5.78);
-        Response response = target("transfermoney").request().put(Entity.entity(request, MediaType.APPLICATION_JSON));
+        Response response = target("transfermoney").request().post(Entity.entity(request, MediaType.APPLICATION_JSON));
         Assert.assertEquals(400, response.getStatus());
         Assert.assertEquals("Account numbers cannot be identical", response.readEntity(String.class));
     }
